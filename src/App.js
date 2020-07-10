@@ -34,7 +34,7 @@ function App() {
   }, [seconds, timerRuning]);
 
   useEffect(() => {
-    if (seconds === 40) {
+    if (seconds === 38) {
       stackPullRef.current.play();
     }
 
@@ -42,7 +42,7 @@ function App() {
       bountiesRef.current.play();
     }
 
-    if(seconds === 50 && minutes % 2 === 1) {
+    if(seconds === 48 && minutes % 2 === 1) {
       runesRef.current.play();
     }
   }, [seconds, minutes]);

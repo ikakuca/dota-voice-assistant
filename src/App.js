@@ -1,11 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+
+import bountyAudio from "./audio/bounty.ogg";
+import runesAudio from "./audio/runes.ogg";
+import stackOrPullAudio from "./audio/stackOrPull.ogg";
+// import neutrailItemsAudio from "./audio/neutralItems.ogg";
+
 // import logo from "./logo.svg";
 import "./App.css";
 
 function App() {
   const [timerRuning, toggleTimer] = useState(false);
-  const [seconds, setSeconds] = useState(58);
+  const [seconds, setSeconds] = useState(0);
   const [minutes, setMinutes] = useState(0);
+
+  const bountiesRef = useRef(null);
+  const runesRef = useRef(null);
+  const stackPullRef = useRef(null);
+  // const neutralItemsRef = useRef(null);
 
   useEffect(() => {
     if (timerRuning) {
@@ -22,8 +33,22 @@ function App() {
     }
   }, [seconds, timerRuning]);
 
+  useEffect(() => {
+    if (seconds === 40) {
+      stackPullRef.current.play();
+    }
+
+    if (seconds === 45 && minutes % 5 === 4) {
+      bountiesRef.current.play();
+    }
+
+    if(seconds === 50 && minutes % 2 === 1) {
+      runesRef.current.play();
+    }
+  }, [seconds, minutes]);
+
   function startTimer() {
-    toggleTimer(true)
+    toggleTimer(true);
   }
 
   function resetTimer() {
@@ -36,9 +61,19 @@ function App() {
     toggleTimer(false);
   }
 
-  function subSeconds() {}
+  // function subSeconds() {}
 
-  function addSeconds() {}
+  // function addSeconds() {}
+
+  function updateMinutes(e) {
+    e.persist();
+    setMinutes(parseInt(e.target.value, 10));
+  }
+
+  function updateSeconds(e) {
+    e.persist();
+    setSeconds(parseInt(e.target.value, 10));
+  }
 
   return (
     <div className="App">
@@ -61,15 +96,30 @@ function App() {
       <br />
       <br />
 
-      <input value={minutes} onFocus={pauseTimer} />
-      <input value={seconds} onFocus={pauseTimer} />
+      <div style={{ width: "100px", margin: "0 auto", display: "flex" }}>
+        <input
+          type="number"
+          name="minutes"
+          value={minutes}
+          onFocus={pauseTimer}
+          onChange={updateMinutes}
+          style={{ width: "50px", fontSize: "20px" }}
+        />
+        <input
+          type="number"
+          name="seconds"
+          value={seconds}
+          onFocus={pauseTimer}
+          onChange={updateSeconds}
+          style={{ width: "50px", fontSize: "20px" }}
+        />
+      </div>
 
       <br />
-      <br />
 
-      <button type="button" onClick={subSeconds}>
-        SUB 1
-      </button>
+      {/* <button type="button" onClick={subSeconds}>
+        -1 SEC
+      </button> */}
 
       <button type="button" onClick={startTimer}>
         START
@@ -83,9 +133,37 @@ function App() {
         RESET
       </button>
 
-      <button type="button" onClick={addSeconds}>
-        ADD 1
-      </button>
+      {/* <button type="button" onClick={addSeconds}>
+        +1 SEC
+      </button> */}
+
+      <br />
+      <br />
+      <br />
+
+      <p>BOUNTIES</p>
+      <audio controls ref={bountiesRef} style={{ marginBottom: "30px" }}>
+        <source src={bountyAudio} type="audio/ogg" />
+        Your browser does not support the audio element.
+      </audio>
+
+      <p>RUNES</p>
+      <audio controls ref={runesRef} style={{ marginBottom: "30px" }}>
+        <source src={runesAudio} type="audio/ogg" />
+        Your browser does not support the audio element.
+      </audio>
+
+      <p>STACK/PULL</p>
+      <audio controls ref={stackPullRef} style={{ marginBottom: "30px" }}>
+        <source src={stackOrPullAudio} type="audio/ogg" />
+        Your browser does not support the audio element.
+      </audio>
+
+      {/* <p>NETUTRAL ITEMS</p>
+      <audio controls ref={neutralItemsRef} style={{ marginBottom: "30px" }}>
+        <source src={neutrailItemsAudio} type="audio/ogg" />
+        Your browser does not support the audio element.
+      </audio> */}
     </div>
   );
 }
